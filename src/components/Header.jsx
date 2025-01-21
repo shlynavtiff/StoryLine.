@@ -2,24 +2,24 @@
 
 import React from 'react'
 import { BsPencilSquare } from "react-icons/bs";
-import { IoNotifications } from "react-icons/io5";
+import { IoNotificationsOutline } from "react-icons/io5";
+
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import testimage from '../app/assets/wasd.jpg'
+import Image from 'next/image';
 
 const Header = () => {
   return (
-    <div className='flex flex-row gap-5 items-center justify-between w-full'>
-      <div>
+    <div className='flex flex-row gap-5 items-center justify-between w-full p-6'>
+      <div className='text-2xl '>
         StoryLine.
       </div>
       <div className='flex flex-row gap-5 items-center'>
-        <div className='flex flex-row items-center cursor-pointer'><BsPencilSquare />Write</div>
-        <div className='cursor-pointer'><IoNotifications /></div>
+        <div className='flex flex-row items-start  cursor-pointer'><BsPencilSquare size={20} /><a href="" className='ml-2 text-sm '>Write</a></div>
+        <div className='cursor-pointer'><IoNotificationsOutline size={24} /></div>
         <div className='cursor-pointer'>
-          <Avatar>
-            <AvatarImage src={testimage} />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          <Image src={testimage} className='w-[32px] h-[32px] rounded-full' />
         </div>
       </div>
     </div>
