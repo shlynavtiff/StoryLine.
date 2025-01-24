@@ -17,20 +17,20 @@ const Footer = () => {
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:flex  xl:flex gap-5 w-full max-w-[1200px] justify-between items-start lg:pt-[3rem]">
                     <div className="flex flex-col gap-5 items-start jsutify-between">
-                        <div className="text-lg font-semibold">Company</div>
+                        <div className="text-lg font-semibold">StoryLine.</div>
                         <div className="flex gap-2 flex-col text-[#b3b3b3] text-sm">
                             <div className="cursor-pointer">Home</div>
                             <div className="cursor-pointer">Articles</div>
                             <div className="cursor-pointer">Contact</div>
-                            <div className="cursor-pointer">FAQs</div>
+                            <div className="cursor-pointer"><a href="/faqs">FAQs</a></div>
                         </div>
                     </div>
                     <div className="flex flex-col gap-5 items-start jsutify-between">
                         <div className="text-lg font-semibold">Legal</div>
                         <div className="flex gap-2 flex-col text-[#b3b3b3] text-sm">
-                            <div className="cursor-pointer">Privacy &amp; Policy</div>
-                            <div className="cursor-pointer">Terms &amp; Conditions</div>
-                            <div className="cursor-pointer">Accessibility</div>
+                            <div className="cursor-pointer"><a href="/privacy-policy">Privacy &amp; Policy</a> </div>
+                            <div className="cursor-pointer"><a href="/terms-and-conditions">Terms &amp; Conditions</a></div>
+                            <div className="cursor-pointer"><a href="/accessibility">Accessibility</a></div>
                         </div>
                     </div>
                     <div className="flex flex-col gap-5 items-start jsutify-between">
