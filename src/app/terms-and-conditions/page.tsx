@@ -4,7 +4,7 @@ const page = () => {
     return (
         <div className='max-w-[1250px] mx-auto px-4 sm:px-6 lg:px-8'>
 
-            <div className='text-[2rem] font-semibold'>
+            <div className='text-[2rem] font-semibold mt-5'>
                 Terms and Conditions
             </div>
 
@@ -19,7 +19,7 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>1. Acceptance of Terms</h2>
+                <h2 className='text-2xl font-semibold'>1. Acceptance of Terms</h2>
                 <div className='mt-2'>
                     By creating an account, accessing, or using the platform, you accept these Terms
                     and our Privacy Policy. These Terms apply to all users, including bloggers, readers,
@@ -33,9 +33,9 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>2. User Accounts</h2>
-                <div className=''>
-                    <ul className='list-disc pl-5 flex flex-col gap-2 mt-5'>
+                <h2 className='text-2xl font-semibold'>2. User Accounts</h2>
+                <div className='pl-5'>
+                    <ul className='list-disc pl-3 flex flex-col gap-2 mt-5'>
                         <li>
                             <strong>Eligibility:</strong> You must be at least 13 years old to create an account.
                             If you are under 18, parental or guardian consent is required.
@@ -59,9 +59,9 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>3. Content Ownership and Rights</h2>
-                <div className=''>
-                    <ul className='list-disc pl-5 flex flex-col gap-2 mt-5'>
+                <h2 className='text-2xl font-semibold'>3. Content Ownership and Rights</h2>
+                <div className='pl-5'>
+                    <ul className='list-disc pl-3 flex flex-col gap-2 mt-5'>
                         <li>
                             <strong>Your Content: </strong>You retain ownership of the content you create and post.
                             By posting on our platform, you grant us a non-exclusive, worldwide, royalty-free license
@@ -80,9 +80,9 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>4. Platform Use</h2>
-                <div className=''>
-                    <ul className='list-disc flex flex-col gap-2 mt-5 pl-5'>
+                <h2 className='text-2xl font-semibold'>4. Platform Use</h2>
+                <div className='pl-5'>
+                    <ul className='list-disc flex flex-col gap-2 mt-5 pl-3'>
                         <li> <strong>Permitted Use:</strong>The platform is for personal, non-commercial use unless explicitly authorized.</li>
                         <li> <strong>Prohibited Activities:</strong>You agree not to:</li>
                         <ul className='list-disc pl-5 flex flex-col gap-2 '>
@@ -107,9 +107,9 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>5. Intellectual Property</h2>
-                <div className=''>
-                    <ul className='list-disc pl-5 flex flex-col gap-2 mt-5'>
+                <h2 className='text-2xl font-semibold'>5. Intellectual Property</h2>
+                <div className='pl-5'>
+                    <ul className='list-disc pl-3 flex flex-col gap-2 mt-5'>
                         <li>
                             The platform and its content (excluding user-generated content) are the property of StoryLine.
                             or its licensors and are protected by copyright, trademark, and other intellectual property laws.
@@ -122,9 +122,9 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>6. Third-Party Links</h2>
-                <div className=''>
-                    <ul className='list-disc pl-5 flex flex-col gap-2 mt-5'>
+                <h2 className='text-2xl font-semibold'>6. Third-Party Links</h2>
+                <div className='pl-5'>
+                    <ul className='list-disc pl-3 flex flex-col gap-2 mt-5'>
                         <li>
                             Our platform may contain links to third-party websites or services. We are not responsible for the content,
                             policies, or practices of third-party sites. You access third-party sites at your own risk.
@@ -134,9 +134,9 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>7. Indemnification</h2>
-                <div className=''>
-                    <ul className='list-disc pl-5 flex flex-col gap-2 mt-5'>
+                <h2 className='text-2xl font-semibold'>7. Indemnification</h2>
+                <div className='pl-5'>
+                    <ul className='list-disc pl-3 flex flex-col gap-2 mt-5'>
                         <li>
                             You agree to indemnify and hold harmless StoryLine., its affiliates, and employees from any claims,
                             liabilities, damages, or expenses arising from your use of the platform or violation of these Terms.
@@ -146,9 +146,9 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>8. Changes to Terms</h2>
-                <div className=''>
-                    <ul className='list-disc pl-5 flex flex-col gap-2 mt-5'>
+                <h2 className='text-2xl font-semibold'>8. Changes to Terms</h2>
+                <div className='pl-5'>
+                    <ul className='list-disc pl-3 flex flex-col gap-2 mt-5'>
                         <li>
                             We may update these Terms from time to time. Changes will be effective upon posting. Continued use of
                             the platform signifies acceptance of the updated Terms.
@@ -161,9 +161,9 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>9. Termination of Use</h2>
-                <div className=''>
-                    <ul className='list-disc pl-5 flex flex-col gap-2 mt-5'>
+                <h2 className='text-2xl font-semibold'>9. Termination of Use</h2>
+                <div className='pl-5'>
+                    <ul className='list-disc pl-3 flex flex-col gap-2 mt-5'>
                         <li>
                             We reserve the right to terminate or suspend access to the platform without prior notice for
                             conduct that violates these Terms or is harmful to other users or the platform.
@@ -177,7 +177,7 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>10. Governing Law</h2>
+                <h2 className='text-2xl font-semibold'>10. Governing Law</h2>
                 <div className=''>
                     <ul className=' flex flex-col gap-2 mt-5'>
                         <li>

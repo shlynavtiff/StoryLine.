@@ -14,8 +14,8 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>Getting Started</h2>
-                <div className='mt-3'>
+                <h2 className='text-2xl font-semibold'>Getting Started</h2>
+                <div className='mt-3 flex flex-col gap-3'>
                     <div className=''>
                         <h2 className='font-semibold'>How do I create an account?</h2>
                         <p >
@@ -42,8 +42,8 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>Using the Platform</h2>
-                <div className='mt-3'>
+                <h2 className='text-2xl font-semibold'>Using the Platform</h2>
+                <div className='mt-3 flex flex-col gap-3'>
                     <div>
                         <h2 className='font-semibold'> How do I publish a blog post?</h2>
                         <p>
@@ -68,8 +68,8 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>Account Management</h2>
-                <div className='mt-3'>
+                <h2 className='text-2xl font-semibold'>Account Management</h2>
+                <div className='mt-3 flex flex-col gap-3'>
                     <div>
                         <h2 className='font-semibold'> How do I update my profile information?</h2>
                         <p>
@@ -88,8 +88,8 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>Privacy and Security</h2>
-                <div className='mt-3'>
+                <h2 className='text-2xl font-semibold'>Privacy and Security</h2>
+                <div className='mt-3 flex flex-col gap-3'>
                     <div>
                         <h2 className='font-semibold'> How is my personal information protected?</h2>
                         <p>
@@ -108,8 +108,8 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>Technical Support</h2>
-                <div className='mt-3'>
+                <h2 className='text-2xl font-semibold'>Technical Support</h2>
+                <div className='mt-3 flex flex-col gap-3'>
                     <div>
                         <h2 className='font-semibold'>What should I do if I encounter a bug or issue?</h2>
                         <p>
@@ -128,8 +128,8 @@ const page = () => {
             </div>
 
             <div className='mt-5'>
-                <h2 className='text-3xl font-semibold'>Additional Questions</h2>
-                <div className='mt-3'>
+                <h2 className='text-2xl font-semibold'>Additional Questions</h2>
+                <div className='mt-3 flex flex-col gap-3'>
                     <div>
                         <h2 className='font-semibold'>How can I contact customer support?</h2>
                         <p>
