@@ -13,7 +13,7 @@ const Header = () => {
   return (
     <div className='flex flex-row gap-5 items-center justify-between w-full p-6'>
       <div className='text-2xl '>
-        StoryLine.
+        <a href="/">StoryLine.</a>
       </div>
       <div className='flex flex-row gap-5 items-center'>
         <div className='flex flex-row items-start  cursor-pointer'><BsPencilSquare size={20} /><a href="" className='ml-2 text-sm '>Write</a></div>
