@@ -16,7 +16,9 @@ const Header = () => {
         <a href="/">StoryLine.</a>
       </div>
       <div className='flex flex-row gap-5 items-center'>
-        <div className='flex flex-row items-start  cursor-pointer'><BsPencilSquare size={20} /><a href="" className='ml-2 text-sm '>Write</a></div>
+        <div className='hidden md:block'>
+          <div className='flex flex-row items-start cursor-pointer'><BsPencilSquare size={20} /><a href="" className='ml-2 text-sm '>Write</a></div>
+        </div>
         <div className='cursor-pointer'><IoNotificationsOutline size={24} /></div>
         <div className='cursor-pointer'>
           <Image src={testimage} className='w-[32px] h-[32px] rounded-full' />
