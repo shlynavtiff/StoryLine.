@@ -19,7 +19,7 @@ const Footer = () => {
                     <div className="flex flex-col gap-5 items-start jsutify-between">
                         <div className="text-lg font-semibold">StoryLine.</div>
                         <div className="flex gap-2 flex-col text-[#b3b3b3] text-sm">
-                            <div className="cursor-pointer">Home</div>
+                            <div className="cursor-pointer"> <a href="/">Home</a></div>
                             <div className="cursor-pointer"><a href="/about">About</a></div>
                             <div className="cursor-pointer">Articles</div>
                             <div className="cursor-pointer">Contact</div>

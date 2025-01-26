@@ -1,22 +1,36 @@
-import Image from "next/image";
-import backdrop from '../app/assets/fqYksMf.png'
+import HeaderSignin from "@/components/HeaderSignin";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <div className="flex flex-row bg-hero-bg justify-center items-center h-screen ">
-      <div className="flex flex-col gap-4">
-        <div className="max-w-[280px]">
-          <h1 className="font-semibold text-7xl">Headlines, Stories & Ideas.</h1>
+    <div className="flex flex-col bg-hero-bg justify-between min-h-screen">
+      {/* Header */}
+      <HeaderSignin />
+
+      {/* Main Content with Background Image */}
+      <div
+        className="flex flex-col gap-4 px-4 items-center justify-center h-[90dvh] borat"
+      >
+        <div className="min-w-[280px] text-center">
+          <h1 className="font-semibold text-6xl sm:text-7xl">
+            Headlines, Stories & Ideas.
+          </h1>
         </div>
         <div className="text-lg">
           A place to read, write, and deepen your understanding.
         </div>
-        <div>
-          <button className='bg-[#242424] py-3 px-6  rounded-full cursor-pointer text-white  border-[1px]border-[#414141]  hover:bg-[#414141]'>
+        <div className="flex flex-col md:flex-row items-center gap-4">
+          <button className="bg-[#242424] py-3 px-6 rounded-full cursor-pointer text-white border-[1px] border-[#414141] hover:bg-[#414141] max-w-[150px]">
             Start reading
+          </button>
+          <button className="bg-[#242424] py-3 px-6 rounded-full cursor-pointer text-white border-[1px] border-[#414141] hover:bg-[#414141] hidden md:block">
+            Our story
           </button>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

@@ -7,6 +7,12 @@
 body {
   font-family:  Outfit, Arial, Helvetica, sans-serif;
 }
+/* 
+.borat {
+  background-image: url('./assets/1.jpg'); 
+  background-size: cover;
+  background-position: center;
+} */
 
 @layer base {
   :root {

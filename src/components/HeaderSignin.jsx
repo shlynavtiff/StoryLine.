@@ -2,7 +2,7 @@ import React from 'react'
 
 const HeaderSignin = () => {
     return (
-        <div className='flex flex-row gap-5 items-center justify-between w-full p-6'>
+        <div className='flex flex-row gap-5 items-center justify-between w-full p-6  '>
             <div className='text-2xl '>
                 <a href="/">StoryLine.</a>
             </div>
