@@ -10,7 +10,7 @@ export default {
 	theme: {
 		extend: {
 			backgroundImage: {
-				'hero-bg': "url('/src/app/assets/fqYksMf.png')"
+				'hero-bg': `url('/src/app/assets/qweqwe.jpg')`
 			},
 			colors: {
 				background: 'hsl(var(--background))',

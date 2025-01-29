@@ -23,8 +23,11 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           <Button variant="outline" className="w-full rounded-full font-normal">
             Sign up with Google
           </Button>
-          <Button variant="outline" className="w-full rounded-full font-normal">
+          <Button variant="outline"  className="w-full rounded-full font-normal">
+            <Link href={`/sign-up`} >
             Sign up with email
+            </Link>
+            
           </Button>
           <Button variant="outline" className="w-full rounded-full font-normal">
             Sign up with Facebook

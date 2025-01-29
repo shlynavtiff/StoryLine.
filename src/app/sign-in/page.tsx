@@ -61,11 +61,6 @@ const page = () => {
     }
 }
 
-
-    
-
-  
-  
   return (
     <div>
       <h1>Sign In</h1>
