@@ -5,23 +5,20 @@ import { supabase } from '../utils/supabaseClient'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-
 const page = () => {
 
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
-    const [repPassword, setRepPassword] = useState<string>("")
     const [Username, setUsername] = useState<string>("")
-
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-
-    async function createUser(params: string) {
+    // Function to create a user in the custom accounts table
+    async function createUser(userId: string) {
         try {
             const { error } = await supabase.from('accounts').insert({
-                userid: params,
+                id: userId,  // Supabase user id should match the `id` field
                 username: Username,
-                password: password,
+                password: password,  // Remember to hash passwords in production!
                 email: email,
             })
             if (error) {
@@ -29,7 +26,6 @@ const page = () => {
             } else {
                 setUsername("")
                 setEmail("")
-                setRepPassword("")
                 setPassword("")
                 setIsLoading(false)
             }
@@ -38,71 +34,41 @@ const page = () => {
         }
     }
 
-    function createUserAccount(e: FormEvent) {
+    // Handle email-based user account creation
+    async function createUserAccount(e: FormEvent) {
         e.preventDefault();
-
-
-        if (!Username || !email || !password || !repPassword) {
-            return console.log("Please fill up all inputs!");
+    
+        if (!Username || !email || !password) {
+            console.log("Please fill up all inputs!");
+            return;
         }
-
-        if (password !== repPassword) {
-            return console.log("Password fields do not match!");
-        }
-
-        if (password.length < 7) {
-            return alert("Please make your password stronger!");
-        }
-
-        if (isLoading) {
-            return; // Prevent duplicate requests
-        }
-
+    
         setIsLoading(true);
-
-
-        // Sign up user with Supabase
-        supabase.auth
-            .signUp({
+    
+        try {
+            const { data, error } = await supabase.auth.signUp({
                 email: email,
                 password: password,
-            })
-            .then((response) => {
-                const user = response as any;
-                setIsLoading(false);
-
-                if (user) {
-                    createUser(user.data.user.id);
-                    console.log("User signed up successfully:", user);
-
-                }
-            })
-            .catch((error: { message: string | string[] }) => {
-                setIsLoading(false);
-
-                if (error) {
-                    console.log(error);
-
-                    if (error.message.includes('For security purposes, you can only request')) {
-                        return alert("For security purposes, you can only request a new verification email every 5 minutes.");
-                    }
-                    if (error.message.includes("already registered") || error.message.includes("email already in use")) {
-                        return alert("Email is already in use!");
-                    }
-
-                    console.error("Signup error:", error.message);
-                    return alert("An error occurred. Please try again.");
-                }
-
-                alert("Something went wrong. Please try again later.");
             });
+    
+            if (error) {
+                console.error("Error signing up:", error);
+                alert(`Sign-up failed: ${error.message}`);
+                return;
+            }
+    
+            if (data.user) {
+                console.log("User signed up successfully:", data.user);
+                await createUser(data.user.id); // Insert into your custom table
+            }
+        } catch (err) {
+            console.error("Unexpected error:", err);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
-
-
-
     return (
-
         <div className="flex min-h-screen flex-col lg:flex-row">
             {/* Left section with background */}
             <div className="lg:flex lg:w-1/2 hidden relative">
@@ -119,15 +85,14 @@ const page = () => {
                 </div>
             </div>
 
-            <div className=' lg:hidden lg:w-1/2 relative h-[180px] items-center flex'> 
-                    <div className="absolute inset-0 bg-cover bg-center"
+            <div className=' lg:hidden lg:w-1/2 relative h-[180px] items-center flex'>
+                <div className="absolute inset-0 bg-cover bg-center"
                     style={{
-                        backgroundImage: `url('/qweqwe.jpg')`,
-                    }}>
-                        <div className="absolute inset-0 bg-black/50" />
-                    </div>
+                        backgroundImage: `url('/qweqwe.jpg')` }}>
+                    <div className="absolute inset-0 bg-black/50" />
+                </div>
 
-                    <div className="relative z-10 flex items-center justify-center w-full">
+                <div className="relative z-10 flex items-center justify-center w-full">
                     <h1 className="text-4xl  text-white">Join StoryLine.</h1>
                 </div>
             </div>
@@ -193,17 +158,12 @@ const page = () => {
                         </Button>
 
                         <p className="text-xs text-gray-500 mt-6">
-                            By creating an account, you agree to the <a href="/terms-and-conditions" className='underline'>Terms of Service.</a>  For more information about StoryLines.'s privacy
-                            practices, see the <a href="/privacy-policy" className='underline'>StoryLine Privacy Statement.</a>  We'll occasionally send you account-related emails.
+                            By creating an account, you agree to the <a href="/terms-and-conditions" className='underline'>Terms of Service.</a> For more information about StoryLine's privacy practices, see the <a href="/privacy-policy" className='underline'>StoryLine Privacy Statement.</a> We'll occasionally send you account-related emails.
                         </p>
                     </form>
-
-
                 </div>
             </div>
         </div>
-
-
     )
 }
 
