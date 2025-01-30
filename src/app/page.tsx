@@ -1,5 +1,6 @@
 import HeaderSignin from "@/components/HeaderSignin";
 import Footer from "@/components/Footer";
+import UserGreetText from "@/components/UserGreetText";
 
 export default function Home() {
   return (
@@ -26,6 +27,8 @@ export default function Home() {
           <button className="bg-[#242424] py-3 px-6 rounded-full cursor-pointer text-white border-[1px] border-[#414141] hover:bg-[#414141] hidden md:block">
             Our story
           </button>
+
+          <UserGreetText/>
         </div>
       </div>
 

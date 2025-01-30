@@ -1,7 +1,7 @@
 'use client'
 
 import React, { FormEvent, useState } from 'react'
-import { supabase } from '../utils/supabaseClient'
+import { supabase } from '../utils/supabase/supabaseClient'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useRouter } from 'next/navigation'

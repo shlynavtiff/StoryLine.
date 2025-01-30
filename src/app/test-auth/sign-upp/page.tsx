@@ -1,7 +1,7 @@
 'use client'
 
 import React, { FormEvent, useState } from 'react'
-import { supabase } from '../utils/supabaseClient'
+import { supabase } from '../../utils/supabase/supabaseClient'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -11,6 +11,10 @@ const page = () => {
     const [password, setPassword] = useState<string>("")
     const [Username, setUsername] = useState<string>("")
     const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    const handleClickCreateAccountButton = (formData: FormData) => {
+
+    }
 
     // Function to create a user in the custom accounts table
     async function createUser(userId: string) {
