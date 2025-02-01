@@ -1,7 +1,8 @@
-import { useState } from 'react'
+
 import './App.css'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import LandingPage from './assets/pages/LandingPage'
+import LandingPage from './pages/LandingPage'
+import About from './pages/staticPages/About'
 
 function App() {
 
@@ -10,6 +11,7 @@ function App() {
     <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/about" element={<About />} />
         </Routes>
     </Router>
   )
