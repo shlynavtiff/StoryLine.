@@ -24,7 +24,7 @@ export default function AuthModalSignIn({ isOpen, onClose }: AuthModalProps) {
         <LoginGithub/>
           <Link href="/login" >
             <Button variant="outline" className="w-full rounded-full font-normal">
-              Sign in with email
+              Sign in with Email
             </Button>
           </Link>
           <Button variant="outline" className="w-full rounded-full font-normal">

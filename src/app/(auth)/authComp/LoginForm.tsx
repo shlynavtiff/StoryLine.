@@ -20,7 +20,7 @@ export const LoginForm = () => {
         const result = await signIn(formData)
     
         if (result.status === "success"){
-          router.push("/");
+          router.push("/private");
         } else {
           setError(result.status);
         }

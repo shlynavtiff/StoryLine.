@@ -1,13 +1,7 @@
 import { Button } from "@/components/ui/button";
 import React from "react";
 
-const AuthButton = ({
-  type,
-  loading,
-}: {
-  type: "login" | "Sign up" | "Reset Password" | "Forgot Password";
-  loading: boolean;
-}) => {
+const AuthButton = ({ type, loading, }: { type: "login" | "Sign up" | "Reset Password" | "Forgot Password"; loading: boolean;}) => {
   return (
     <Button
       disabled={loading}

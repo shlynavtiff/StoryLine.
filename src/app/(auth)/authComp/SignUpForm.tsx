@@ -1,4 +1,5 @@
 "use client"
+
 import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
@@ -26,6 +27,8 @@ const SignUpForm = () => {
       router.push("/")
     } else {
       setError(result.status)
+      console.log(error)
+      console.error(error)
     }
 
     setLoading(false)

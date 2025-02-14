@@ -4,6 +4,8 @@ import "./globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HeaderSignin from "../components/HeaderSignin";
+import { Toaster } from "react-hot-toast"
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -30,6 +32,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* <HeaderSignin/> */}
+        <Toaster position="top-right" />
         {children}
         <Footer/>
       </body>
