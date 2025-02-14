@@ -1,14 +1,36 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Input } from "@/components/ui/input"
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button"
-import { login } from '@/lib/auth-actions'
+import { signIn } from "../../../../actions/auth";
+
 
 export const LoginForm = () => {
+    const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const formData = new FormData(event.currentTarget);
+        const result = await signIn(formData)
+    
+        if (result.status === "success"){
+          router.push("/");
+        } else {
+          setError(result.status);
+        }
+
+    setLoading(false);
+  };
+
 
     return (
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-2">
                 <label htmlFor="email" className="text-sm font-medium">
                     Email
@@ -39,25 +61,9 @@ export const LoginForm = () => {
                 </p>
             </div>
 
-            <div className="space-y-2">
-                <label htmlFor="username" className="text-sm font-medium">
-                    Username
-                </label>
-                <Input
-                    id="username"
-                    type="text"
-                    required
-                    // value={Username}
-                    // onChange={(e) => setUsername(e.target.value)}
-                    className="w-full"
-                />
-                <p className="text-xs text-gray-500">
-                    Username may only contain alphanumeric characters or single hyphens, and cannot begin or end with a
-                    hyphen.
-                </p>
-            </div>
+            {/* add toast */}
 
-            <Button type="submit" formAction={login} className="w-full bg-[#353535] hover:bg-[#454545] text-white">
+            <Button type="submit" className="w-full bg-[#353535] hover:bg-[#454545] text-white">
                 Continue →
             </Button>
 

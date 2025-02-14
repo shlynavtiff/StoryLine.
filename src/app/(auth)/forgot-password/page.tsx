@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useRouter } from 'next/navigation'
 import { LoginForm } from '../authComp/LoginForm'
+import ForgotPassword from '../authComp/ForgotPassword'
 
 
 const page = () => {
@@ -20,7 +21,7 @@ const page = () => {
                     <div className="absolute inset-0 bg-black/50" />
                 </div>
                 <div className="relative z-10 flex items-center justify-center w-full">
-                    <h1 className="text-4xl  text-white">Welcome back.</h1>
+                    <h1 className="text-4xl  text-white">Forgot your password?</h1>
                 </div>
             </div>
 
@@ -32,16 +33,18 @@ const page = () => {
                 </div>
 
                 <div className="relative z-10 flex items-center justify-center w-full">
-                    <h1 className="text-4xl  text-white">Welcome back.</h1>
+                    <h1 className="text-4xl  text-white">Forgot your password?</h1>
                 </div>
             </div>
 
             {/* Right section with form */}
             <div className="w-full lg:w-1/2 p-8 sm:p-12 lg:p-16 items-center">
                 <div className="max-w-md mx-auto">
-                    <h2 className="text-2xl font-semibold mb-8">Welcome back.</h2>
+                    <h2 className="text-2xl font-semibold mb-8">Forgot Password</h2>
+                    
 
-                    <LoginForm/>
+                    <ForgotPassword/>
+                    
 
                 </div>
             </div>

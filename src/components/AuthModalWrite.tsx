@@ -3,7 +3,7 @@ import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import Link from "next/link"
-import SignInWithGoogle from '@/app/(auth)/login/components/SignInWithGoogle'
+import LoginGithub from '@/app/(auth)/authComp/LoginGithub';
 
 
 interface AuthModalProps {
@@ -18,24 +18,26 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
           <div className="flex justify-end">
-            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onClose}>
-            </Button>
+            {/* <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onClose}>
+            </Button> */}
           </div>
           <DialogTitle className="text-center text-xl font-normal">Create an account to start crafting.</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-3 px-4 py-6">
-          <SignInWithGoogle/>
-          <Button variant="outline" className="w-full rounded-full font-normal">
-            Sign up with email
-          </Button>
+        <LoginGithub/>
+          <Link href="/sign-up" >
+            <Button variant="outline" className="w-full rounded-full font-normal">
+              Sign up with email
+            </Button>
+          </Link>
           <Button variant="outline" className="w-full rounded-full font-normal">
             Sign up with Facebook
           </Button>
 
           <div className="text-center mt-4 text-sm">
             Already have an account?{" "}
-            <Link href="/sign-in" className="underline hover:text-gray-700">
-              Sign in
+            <Link href="/sign-up" className="underline hover:text-gray-700">
+              Sign up
             </Link>
           </div>
 

@@ -4,7 +4,8 @@ import React, { FormEvent, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sign } from 'crypto'
-import SignUpForm from './components/SignUpForm'
+import SignUpForm from '../authComp/SignUpForm'
+
 
 const page = () => {
   return (
