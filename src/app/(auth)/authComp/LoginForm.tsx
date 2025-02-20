@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button"
 import { signIn } from "../../../../actions/auth";
-
+import { toast } from "react-hot-toast";
 
 export const LoginForm = () => {
     const [error, setError] = useState<string | null>(null);
@@ -20,9 +20,11 @@ export const LoginForm = () => {
         const result = await signIn(formData)
     
         if (result.status === "success"){
+          toast.success("You are now logged in, redirecting you to your dashboard");
           router.push("/private");
         } else {
           setError(result.status);
+          toast.error("Something went wrong. Please try again.");
         }
 
     setLoading(false);

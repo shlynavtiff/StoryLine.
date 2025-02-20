@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import AuthButton from "./AuthButton";
 import { forgotPassword } from "../../../../actions/auth";
+import toast from "react-hot-toast";
 
 const ForgotPassword = () => {
   const [error, setError] = useState<string | null>(null);
@@ -16,8 +17,9 @@ const ForgotPassword = () => {
 
     if (result.status === "success") {
       //add toast
-      alert("Check your email for the reset link");
+      toast.success("Check your email for the reset link");
     } else {
+      toast.error("Something went wrong. Please try again.");
       setError(result.status);
     }
 

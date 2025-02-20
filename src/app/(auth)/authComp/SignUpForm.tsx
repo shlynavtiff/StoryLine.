@@ -7,6 +7,7 @@ import { signUp } from "../../../../actions/auth"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Eye, EyeOff } from "lucide-react"
+import toast from "react-hot-toast"
 
 const SignUpForm = () => {
   const [error, setError] = useState<string | null>(null)
@@ -24,8 +25,10 @@ const SignUpForm = () => {
     const result = await signUp(formData)
 
     if (result.status === "success") {
+      toast.success("Account created successfully")
       router.push("/")
     } else {
+      toast.error("Something went wrong. PLease try again.")
       setError(result.status)
       console.log(error)
       console.error(error)

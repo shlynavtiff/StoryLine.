@@ -1,5 +1,7 @@
 "use client";
+
 import React, { useState } from "react";
+import { signOut } from "../../../../actions/auth";
 
 const Logout = () => {
   const [loading, setLoading] = useState(false);
@@ -8,7 +10,11 @@ const Logout = () => {
     event.preventDefault();
     setLoading(true);
 
+    await signOut();
+
     setLoading(false);
+
+    console.log("Signed out");
   };
 
   return (

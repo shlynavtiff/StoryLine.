@@ -32,7 +32,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* <HeaderSignin/> */}
-        <Toaster position="top-right" />
+        <Toaster position="top-right" toastOptions={{
+          className:'',
+          style: {
+            padding: '30px',
+            fontSize: '1rem',
+            width: '400px'
+          }
+        }} />
         {children}
         <Footer/>
       </body>

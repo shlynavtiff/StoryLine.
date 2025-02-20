@@ -116,9 +116,13 @@ export async function signInWithGithub() {
     })
 
     if (error) {
-        redirect("/error");
-    } else if (data.url) {
-        return redirect(data.url);
+        throw new Error("GitHub sign-in failed");
+        console.error(error);
+    }
+
+    if (data.url) {
+        return redirect(data.url); // Next.js will handle the redirection
+        console.error(error);
     }
 }
 
