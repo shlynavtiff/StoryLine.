@@ -5,6 +5,8 @@ import { FaFacebook } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
+import { IoGlobeOutline } from "react-icons/io5";
+
 
 const Footer = () => {
     return (
@@ -68,6 +70,13 @@ const Footer = () => {
                                 <a href="mailto:naval.ashleyjames.redacto@gmail.com" target='_blank' className="flex items-center gap-2 cursor-pointer">
                                 <HiOutlineMail />
                                     Gmail
+                                    
+                                </a>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <a href="https://www.shlynav.me/" target='_blank' className="flex items-center gap-2 cursor-pointer">
+                                <IoGlobeOutline />
+                                    Website
                                     
                                 </a>
                             </div>

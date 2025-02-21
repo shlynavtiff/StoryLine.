@@ -116,13 +116,9 @@ export async function signInWithGithub() {
     })
 
     if (error) {
-        throw new Error("GitHub sign-in failed");
-        console.error(error);
-    }
-
-    if (data.url) {
-        return redirect(data.url); // Next.js will handle the redirection
-        console.error(error);
+        redirect("/private");
+    } else if (data.url) {
+        return redirect(data.url);
     }
 }
 
