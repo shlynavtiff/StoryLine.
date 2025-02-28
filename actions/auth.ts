@@ -16,7 +16,7 @@ export async function getUserSession() {
 
     return {
         status: "success",
-        user: data.session?.user
+        user: data.session?.user,
     }
 }
 

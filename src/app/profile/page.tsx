@@ -75,6 +75,7 @@ const ProfilePage = () => {
               <button className="bg-[#242424] text-sm py-2 px-4 rounded-full cursor-pointer text-white border-[1px] border-[#414141] hover:bg-[#414141]">Get started</button>
             </section>
           )}
+
         </main>
       </div>
 

@@ -2,6 +2,7 @@
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "../../utils/supabase/client";
+import toast from 'react-hot-toast'
 
 export default function CreatePost() {
     const [title, setTitle] = useState<string>("");
@@ -12,7 +13,7 @@ export default function CreatePost() {
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
         if (!title.trim() || !content.trim()) {
-            alert("Title and content are required!");
+            toast.error("Title and content are required!");
             return;
         }
 
@@ -21,7 +22,7 @@ export default function CreatePost() {
         const { data: userData, error: userError } = await supabase.auth.getUser();
 
         if (userError || !userData?.user) {
-            alert("You must be logged in to create a post!");
+            toast.error('You must be logged in to create a post!')
             setLoading(false);
             return;
         }
@@ -31,7 +32,7 @@ export default function CreatePost() {
         ]);
 
         if (error) {
-            alert("Failed to create post");
+            toast.error("Failed to create post, please try again.");
             console.error(error);
         } else {
             router.push("/"); // Redirect to homepage after posting
@@ -52,7 +53,7 @@ export default function CreatePost() {
                     className="w-full p-2 border rounded"
                 />
                 <textarea
-                    placeholder="Write your post here..."
+                    placeholder="Tell your story"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     className="w-full p-2 border rounded h-40"
@@ -63,6 +64,7 @@ export default function CreatePost() {
                     className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
                 >
                     {loading ? "Publishing..." : "Publish"}
+                    
                 </button>
             </form>
         </div>

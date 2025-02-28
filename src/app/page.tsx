@@ -4,6 +4,7 @@ import React from 'react'
 import HeaderSignin from "@/components/HeaderSignin";
 import Footer from "@/components/Footer";
 import ClientComponent from './(auth)/authComp/ClientComponent';
+import Logout from './(auth)/authComp/Logout';
 // import UserGreetText from "@/components/UserGreetText";
 // import LoginLogoutButton from "@/components/LoginLogoutButton";
 
@@ -22,6 +23,7 @@ const page = () => {
         </div>
         <div className="text-lg">
           <ClientComponent/>
+          <Logout/>
           A place to read, write, and deepen your understanding.
         </div>
         <div className="flex flex-col md:flex-row items-center gap-4">
