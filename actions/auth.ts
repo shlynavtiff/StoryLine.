@@ -46,7 +46,7 @@ export async function signUp(formData: FormData) {
         }
     } else if (data?.user?.identities?.length === 0) {
         return {
-            status: "User witht his email already exists",
+            status: "User with his email already exists",
             user: null
         }
     }
