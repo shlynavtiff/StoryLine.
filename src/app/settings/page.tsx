@@ -1,96 +1,173 @@
-"use client";
+"use client"
 
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import { IoIosMore } from "react-icons/io";
-import { createClient } from "@/utils/supabase/client";
-import Header from "@/components/Header";
-import { ArrowUpRight } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
+import type React from "react"
+import { useState, useEffect } from "react"
+import Image from "next/image"
+import { IoIosMore } from "react-icons/io"
+import { createClient } from "@/utils/supabase/client"
+import Header from "@/components/Header"
+import { ArrowUpRight } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
+import { toast } from "react-hot-toast"
 
 const Page = () => {
-  const [activeTab, setActiveTab] = useState("Account");
-  const [userId, setUserId] = useState<string | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [activeTab, setActiveTab] = useState("Account")
+  const [userId, setUserId] = useState<string | null>(null)
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const [username, setUsername] = useState<string>("")
+  const [newUsername, setNewUsername] = useState<string>("")
+  const [showUsernameForm, setShowUsernameForm] = useState(false)
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const supabase = createClient();
-      const { data, error } = await supabase.auth.getUser();
+    async function fetchUser() {
+      const supabase = createClient()
+      const { data, error } = await supabase.auth.getUser()
 
       if (error || !data?.user) {
-        console.error("Error fetching user:", error);
-        return;
+        console.log("User not authenticated")
+        return
       }
 
-      setUserId(data.user.id);
+      setUserId(data.user.id)
+      console.log("User ID:", data.user.id) // Debugging
 
-      // Fetch current avatar
+      // Fetch the existing profile image
       const { data: profile, error: profileError } = await supabase
         .from("user_profiles")
         .select("avatar_url")
         .eq("id", data.user.id)
-        .single();
+        .single()
 
       if (profileError) {
-        console.error("Error fetching profile:", profileError);
-      } else {
-        setImageUrl(profile.avatar_url);
+        console.error("Error fetching profile:", profileError)
+        return
       }
-    };
 
-    fetchUser();
-  }, []);
+      if (profile?.avatar_url) {
+        setImageUrl(profile.avatar_url)
+        console.log("Existing Avatar URL:", profile.avatar_url) // Debugging
+      }
+    }
+
+    fetchUser()
+  }, [])
+
+  useEffect(() => {
+    async function fetchUsername() {
+      const supabase = createClient()
+      const { data, error } = await supabase.auth.getUser()
+
+      if (error || !data?.user) {
+        console.log("User not authenticated", error)
+        return
+      }
+
+      setUserId(data.user.id)
+
+      // Fetch username
+      const { data: profile, error: profileError } = await supabase
+        .from("user_profiles")
+        .select("username")
+        .eq("id", data.user.id)
+        .single()
+
+      if (profileError) {
+        console.error("Error fetching profile:", profileError)
+        return
+      }
+
+      if (profile?.username) {
+        setUsername(profile.username)
+        setNewUsername(profile.username)
+        console.log("Existing Username:", profile.username)
+      }
+    }
+
+    fetchUsername()
+  }, [])
+
+  const handleUsernameChange = async () => {
+    if (!userId || newUsername.trim() === "") {
+      console.error("Username cannot be empty")
+      toast.error("Username cannot be empty")
+      return
+    }
+
+    setUploading(true)
+    const supabase = createClient()
+
+    try {
+      const { error } = await supabase.from("user_profiles").update({ username: newUsername }).eq("id", userId)
+
+      if (error) throw error
+
+      setUsername(newUsername)
+      setShowUsernameForm(false)
+      toast.success("Username updated successfully")
+    } catch (error) {
+      console.error("Error updating username:", error)
+      toast.error("Failed to update username. Please try again.")
+    } finally {
+      setUploading(false)
+    }
+  }
 
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!userId) {
-      console.error("User not logged in");
-      return;
+      console.error("User not logged in")
+      return
     }
 
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const file = event.target.files?.[0]
+    if (!file) {
+      console.error("No file selected")
+      return
+    }
 
-    setUploading(true);
-
-    const supabase = createClient();
-    const fileExt = file.name.split(".").pop();
-    const filePath = `avatars/${userId}.${fileExt}`;
+    setUploading(true)
+    const supabase = createClient()
+    const fileExt = file.name.split(".").pop()
+    const filePath = `avatars/${userId}.${fileExt}`
 
     try {
-      // Upload image to Supabase Storage
-      const { error: uploadError } = await supabase.storage
-        .from("avatars")
-        .upload(filePath, file, { upsert: true });
+      // 🛑 First, delete any existing avatar to prevent duplicate uploads
+      await supabase.storage.from("avatars").remove([filePath])
 
-      if (uploadError) throw uploadError;
+      // ✅ Upload the new file
+      const { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, file, { upsert: true })
 
-      // Get public URL of the uploaded image
-      const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
-      const avatarUrl = data.publicUrl;
+      if (uploadError) throw uploadError
 
-      // Update user profile
+      // ✅ Get the new public URL
+      const { data } = supabase.storage.from("avatars").getPublicUrl(filePath)
+      const avatarUrl = `${data.publicUrl}?timestamp=${Date.now()}` // Force refresh
+
+      console.log("Generated Public URL:", avatarUrl)
+
+      // ✅ Update database with new avatar URL
       const { error: updateError } = await supabase
         .from("user_profiles")
         .update({ avatar_url: avatarUrl })
-        .eq("id", userId);
+        .eq("id", userId)
 
-      if (updateError) throw updateError;
+      if (updateError) throw updateError
 
-      console.log("Profile updated with avatar:", avatarUrl);
-      setImageUrl(avatarUrl);
+      console.log("Profile updated successfully!")
+      setImageUrl(avatarUrl) // Update state with the new image
     } catch (error) {
-      console.error("Error uploading image:", error);
+      console.error("Error uploading image:", error)
+      alert("Failed to upload image. Please try again.")
     } finally {
-      setUploading(false);
+      setUploading(false)
+      event.target.value = "" // Reset file input
     }
-  };
+  }
 
   return (
     <>
       <Header />
-      <div className="min-h-screen justify-between bg-gray-50 flex flex-col py-6 max-w-[600px] mx-auto px-6">
+      <div className="min-h-dvh justify-between bg-gray-50 flex flex-col py-6 max-w-[600px] mx-auto px-6 ">
         <div className="flex flex-row items-center justify-between mb-4">
           <p className="text-[35px] sm:text-[40px] font-semibold">Settings</p>
           <IoIosMore />
@@ -103,9 +180,7 @@ const Page = () => {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`pb-2 text-sm font-medium ${
-                activeTab === tab
-                  ? "text-gray-800 border-b-2 border-black"
-                  : "text-gray-500 hover:text-gray-800"
+                activeTab === tab ? "text-gray-800 border-b-2 border-black" : "text-gray-500 hover:text-gray-800"
               }`}
             >
               {tab}
@@ -114,7 +189,7 @@ const Page = () => {
         </div>
 
         {/* Main Profile Section */}
-        <main className="flex-grow bg-white rounded-lg">
+        <main className="flex-grow rounded-lg p-4">
           {/* Account Tab */}
           {activeTab === "Account" && (
             <section className="flex flex-col gap-3 justify-center mx-auto">
@@ -125,16 +200,44 @@ const Page = () => {
 
               <div className="flex flex-row justify-between items-center max-w-[550px] text-[15px] cursor-pointer">
                 <h2>Username</h2>
-                <p>@shylnav.tiff</p>
+                {!showUsernameForm ? (
+                  <div className="flex items-center gap-2" onClick={() => setShowUsernameForm(true)}>
+                    <p>@{username}</p>
+                    <ArrowUpRight size={16} />
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={newUsername}
+                      onChange={(e) => setNewUsername(e.target.value)}
+                      className="border rounded px-2 py-1 text-sm"
+                    />
+                    <button
+                      onClick={handleUsernameChange}
+                      disabled={uploading}
+                      className="bg-black text-white rounded px-2 py-1 text-sm"
+                    >
+                      {uploading ? "Saving..." : "Save"}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowUsernameForm(false)
+                        setNewUsername(username)
+                      }}
+                      className="text-gray-500 text-sm"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Profile Image Upload Section */}
               <div className="flex flex-row justify-between items-center max-w-[550px] cursor-pointer">
                 <div>
                   <h2 className="text-[15px]">Profile information</h2>
-                  <p className="text-[9px] max-w-[150px]">
-                    Edit your photo, name, pronouns, short bio, etc.
-                  </p>
+                  <p className="text-[9px] max-w-[150px]">Edit your photo, name, pronouns, short bio, etc.</p>
                 </div>
 
                 <div className="flex flex-row items-center gap-2">
@@ -149,7 +252,7 @@ const Page = () => {
                   <label htmlFor="fileInput" className="cursor-pointer">
                     {imageUrl ? (
                       <Image
-                        src={imageUrl}
+                        src={imageUrl || "/placeholder.svg"}
                         alt="Profile"
                         width={28}
                         height={28}
@@ -182,12 +285,9 @@ const Page = () => {
               <h2 className="text-[20px]">Manage publications</h2>
               <div className="flex flex-row justify-between items-center max-w-[550px] cursor-pointer">
                 <div>
-                  <h3 className="text-[15px]">
-                    Allow readers to leave private notes on your stories
-                  </h3>
+                  <h3 className="text-[15px]">Allow readers to leave private notes on your stories</h3>
                   <p className="text-[9px]">
-                    Private notes are visible to you and (if left in a publication)
-                    all Editors of the publication.
+                    Private notes are visible to you and (if left in a publication) all Editors of the publication.
                   </p>
                 </div>
                 <Checkbox />
@@ -196,9 +296,7 @@ const Page = () => {
               <div className="flex flex-row justify-between items-center max-w-[550px] cursor-pointer">
                 <div>
                   <h3 className="text-[15px]">Allow email replies</h3>
-                  <p className="text-[9px]">
-                    Let readers reply to your stories directly from their email.
-                  </p>
+                  <p className="text-[9px]">Let readers reply to your stories directly from their email.</p>
                 </div>
                 <Checkbox />
               </div>
@@ -210,16 +308,12 @@ const Page = () => {
             <section className="flex flex-col gap-4">
               <h2 className="text-[20px]">Email notifications</h2>
               <div className="flex flex-row justify-between items-center max-w-[550px] cursor-pointer">
-                <div className="text-[15px]">
-                  When someone follows you or highlights the same passage in a story
-                </div>
+                <div className="text-[15px]">When someone follows you or highlights the same passage in a story</div>
                 <Checkbox />
               </div>
 
               <div className="flex flex-row justify-between items-center max-w-[550px] cursor-pointer">
-                <div className="text-[15px]">
-                  When someone mentions you in their story
-                </div>
+                <div className="text-[15px]">When someone mentions you in their story</div>
                 <Checkbox />
               </div>
             </section>
@@ -227,7 +321,8 @@ const Page = () => {
         </main>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page
+
