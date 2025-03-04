@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { BsPencilSquare } from "react-icons/bs";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { createClient } from '../utils/supabase/client';
-import toast from "react-hot-toast";
 import Image from 'next/image';
 import { User } from '@supabase/supabase-js';
 import HeaderSignin from './HeaderSignin';
@@ -26,12 +25,20 @@ const DynamicHeader = () => {
                 return;
             }
             setUser(data.user);
+            fetchProfile(data.user.id);
+        }
 
-            const { data: profile } = await supabase
+        async function fetchProfile(userId: string) {
+            const { data: profile, error } = await supabase
                 .from("user_profiles")
                 .select('avatar_url, username')
-                .eq("id", data.user.id)
+                .eq("id", userId)
                 .single();
+
+            if (error) {
+                console.error("Error fetching profile:", error);
+                return;
+            }
 
             if (profile) {
                 setAvatarUrl(profile.avatar_url);
@@ -41,11 +48,11 @@ const DynamicHeader = () => {
 
         fetchUser();
 
-        // Listen for auth changes
+        // Listen for auth and user profile updates
         const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
             if (session?.user) {
                 setUser(session.user);
-                fetchUser(); // Refresh user data
+                fetchProfile(session.user.id); // Refresh profile on auth change
             } else {
                 setUser(null);
                 setAvatarUrl(null);
@@ -53,8 +60,23 @@ const DynamicHeader = () => {
             }
         });
 
+        // Listen for avatar updates in `user_profiles`
+        const channel = supabase
+            .channel('user-profile-changes')
+            .on(
+                'postgres_changes',
+                { event: 'UPDATE', schema: 'public', table: 'user_profiles', filter: `id=eq.${user?.id}` },
+                (payload) => {
+                    if (payload.new.avatar_url) {
+                        setAvatarUrl(payload.new.avatar_url); // Update avatar dynamically
+                    }
+                }
+            )
+            .subscribe();
+
         return () => {
             authListener.subscription.unsubscribe();
+            supabase.removeChannel(channel);
         };
     }, []);
 
@@ -80,13 +102,25 @@ const DynamicHeader = () => {
                     </div>
                 </Link>
 
-                {/* ✅ Use username state instead of user_metadata */}
+                {/* ✅ Use updated avatar and username dynamically */}
                 <Link href={`/profile/${username || ""}`} passHref>
                     <div className='cursor-pointer'>
                         {avatarUrl ? (
-                            <Image src={avatarUrl} alt='User Profile' className='w-[32px] h-[32px] rounded-full' width={32} height={32} />
+                            <Image 
+                                src={avatarUrl} 
+                                alt='User Profile' 
+                                className='w-[32px] h-[32px] rounded-full' 
+                                width={32} 
+                                height={32} 
+                            />
                         ) : (
-                            <Image src={testimage} alt='User Profile' className='w-[32px] h-[32px] rounded-full' width={32} height={32} />
+                            <Image 
+                                src={testimage} 
+                                alt='User Profile' 
+                                className='w-[32px] h-[32px] rounded-full' 
+                                width={32} 
+                                height={32} 
+                            />
                         )}
                     </div>
                 </Link>

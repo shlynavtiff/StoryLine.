@@ -16,77 +16,45 @@ const Page = () => {
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const [username, setUsername] = useState<string>("")
+
   const [newUsername, setNewUsername] = useState<string>("")
   const [showUsernameForm, setShowUsernameForm] = useState(false)
 
-  useEffect(() => {
-    async function fetchUser() {
-      const supabase = createClient()
-      const { data, error } = await supabase.auth.getUser()
-
-      if (error || !data?.user) {
-        console.log("User not authenticated")
-        return
-      }
-
-      setUserId(data.user.id)
-      console.log("User ID:", data.user.id) // Debugging
-
-      // Fetch the existing profile image
-      const { data: profile, error: profileError } = await supabase
-        .from("user_profiles")
-        .select("avatar_url")
-        .eq("id", data.user.id)
-        .single()
-
-      if (profileError) {
-        console.error("Error fetching profile:", profileError)
-        return
-      }
-
-      if (profile?.avatar_url) {
-        setImageUrl(profile.avatar_url)
-        console.log("Existing Avatar URL:", profile.avatar_url) // Debugging
-      }
-    }
-
-    fetchUser()
-  }, [])
+  const [email, setEmail] = useState<string | null>(null);
+  const [userNotFound, setUserNotFound] = useState<boolean>(false);
 
   useEffect(() => {
-    async function fetchUsername() {
-      const supabase = createClient()
-      const { data, error } = await supabase.auth.getUser()
-
-      if (error || !data?.user) {
-        console.log("User not authenticated", error)
-        return
+    async function fetchUserProfile() {
+      const supabase = createClient();
+      
+      const { data: profileData, error: authError } = await supabase.auth.getUser();
+      if (authError || !profileData?.user) {
+        console.log("User not authenticated", authError);
+        return;
       }
-
-      setUserId(data.user.id)
-
-      // Fetch username
+  
+      // Fetch additional profile details (username, avatar, etc.)
       const { data: profile, error: profileError } = await supabase
         .from("user_profiles")
-        .select("username")
-        .eq("id", data.user.id)
-        .single()
-
-      if (profileError) {
-        console.error("Error fetching profile:", profileError)
-        return
+        .select("username, avatar_url, email")
+        .eq("id", profileData.user.id)
+        .single();
+  
+      if (profileError || !profile) {
+        console.error("Error fetching profile:", profileError);
+        setUserNotFound(true);
+        return;
       }
 
-      if (profile?.username) {
-        setUsername(profile.username)
-        setNewUsername(profile.username)
-        console.log("Existing Username:", profile.username)
-      }
+      setUserId(profileData.user.id);
+      setEmail(profileData.user.email ?? null);
+      setImageUrl(profile?.avatar_url);
+      setUsername(profile.username);
+      setNewUsername(profile.username);
     }
-
-    fetchUsername()
-  }, [])
-
+    fetchUserProfile();
+  }, []);
+  
   const handleUsernameChange = async () => {
     if (!userId || newUsername.trim() === "") {
       console.error("Username cannot be empty")
@@ -166,7 +134,6 @@ const Page = () => {
 
   return (
     <>
-      <Header />
       <div className="min-h-dvh justify-between bg-gray-50 flex flex-col py-6 max-w-[600px] mx-auto px-6 ">
         <div className="flex flex-row items-center justify-between mb-4">
           <p className="text-[35px] sm:text-[40px] font-semibold">Settings</p>
@@ -195,7 +162,7 @@ const Page = () => {
             <section className="flex flex-col gap-3 justify-center mx-auto">
               <div className="flex flex-row justify-between items-center max-w-[550px] cursor-pointer">
                 <h2 className="text-[15px]">Email address</h2>
-                <p className="sm:text-[15px] text-[12px]">shlynavtiff@gmail.com</p>
+                <p className="sm:text-[15px] text-[12px]">{email || "No email available"}</p>
               </div>
 
               <div className="flex flex-row justify-between items-center max-w-[550px] text-[15px] cursor-pointer">
