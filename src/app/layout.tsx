@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HeaderSignin from "../components/HeaderSignin";
 import { Toaster } from "react-hot-toast"
+import DynamicHeader from "@/components/DynamicHeader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,18 +29,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {/* <HeaderSignin/> */}
-        <Toaster position="top-right" toastOptions={{
-          className:'',
-          style: {
-            padding: '30px',
-            fontSize: '1rem',
-            width: '400px'
-          }
-        }} />
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+       <DynamicHeader/>
+        <Toaster position="top-right" toastOptions={{className:'',style: {padding: '30px',fontSize: '1rem',width: '400px'}}} />
         {children}
         <Footer/>
       </body>

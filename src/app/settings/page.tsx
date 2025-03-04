@@ -131,21 +131,21 @@ const Page = () => {
     const filePath = `avatars/${userId}.${fileExt}`
 
     try {
-      // 🛑 First, delete any existing avatar to prevent duplicate uploads
+      
       await supabase.storage.from("avatars").remove([filePath])
 
-      // ✅ Upload the new file
+      
       const { error: uploadError } = await supabase.storage.from("avatars").upload(filePath, file, { upsert: true })
 
       if (uploadError) throw uploadError
 
-      // ✅ Get the new public URL
+      
       const { data } = supabase.storage.from("avatars").getPublicUrl(filePath)
       const avatarUrl = `${data.publicUrl}?timestamp=${Date.now()}` // Force refresh
 
       console.log("Generated Public URL:", avatarUrl)
 
-      // ✅ Update database with new avatar URL
+      
       const { error: updateError } = await supabase
         .from("user_profiles")
         .update({ avatar_url: avatarUrl })

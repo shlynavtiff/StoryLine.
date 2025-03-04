@@ -24,7 +24,7 @@ const HeaderSignin = () => {
     const closeAuthModal = () => setIsAuthModalOpen(false);
 
     return (
-        <div className='flex flex-row gap-5 items-center justify-between w-full p-6'>
+        <div className='flex flex-row gap-5 items-center justify-between max-w-[1500px] mx-auto w-full p-6'>
             <div className='text-2xl'>
                 <a href="/">StoryLine.</a>
             </div>

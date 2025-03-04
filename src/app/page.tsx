@@ -11,11 +11,9 @@ import Logout from './(auth)/authComp/Logout';
 const page = () => {
   return (
     <div className="flex flex-col bg-hero-bg justify-between min-h-screen">
-      {/* Header Section */}
-      <HeaderSignin />
 
       {/* Main Content */}
-      <div className="flex flex-col gap-4 px-4 items-center justify-center h-[90dvh]">
+      <div className="flex flex-col gap-4 px-4 items-center justify-center h-[100dvh]">
         <div className="min-w-[280px] text-center">
           <h1 className="font-semibold text-6xl sm:text-7xl">
             Headlines, Stories & Ideas.

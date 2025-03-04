@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, } from "react"
 import Image from "next/image"
 import { IoIosMore } from "react-icons/io"
 import { useParams } from "next/navigation"
@@ -82,7 +82,6 @@ const ProfilePage = () => {
 
   return (
     <>
-      <Header />
       <div className="min-h-screen justify-between bg-gray-50 flex flex-col py-6 max-w-[1280px] mx-auto px-6">
         {userNotFound ? (
           <div className="text-center py-10">
@@ -124,6 +123,15 @@ const ProfilePage = () => {
             </div>
 
             <main className="flex-grow bg-white rounded-lg p-6">
+            {activeTab === "Home" && (
+            <section>
+              <h3 className="text-lg font-medium text-gray-800 mb-4">Reading list</h3>
+              <div className="bg-gray-100 border border-gray-200 rounded-lg p-6 flex justify-center items-center">
+                <p className="text-gray-500">No stories</p>
+              </div>
+            </section>
+          )}
+
             {activeTab === "About" && (
             <section className="flex items-center justify-center flex-col gap-2">
               <div className="w-full max-w-md">
