@@ -72,8 +72,6 @@ const page = () => {
     return (
         <>
 
-            <Header />
-
             <div className="min-h-screen justify-between bg-gray-50 flex flex-col py-6 max-w-[900px] mx-auto px-6">
 
                 <div className="flex flex-row items-center justify-between mb-4">

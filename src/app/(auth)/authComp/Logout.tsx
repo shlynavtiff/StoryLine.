@@ -18,7 +18,7 @@ const Logout = () => {
   };
 
   return (
-    <div className="bg-gray-600 text-white text-sm px-4 py-2 rounded-md cursor-pointer">
+    <div className=" text-black text-sm  rounded-md cursor-pointer">
       <form onSubmit={handleLogout}>
         <button type="submit" disabled={loading}>
           {loading ? "Signing out..." : "Sign out"}

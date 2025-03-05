@@ -111,7 +111,7 @@ const ProfilePage = () => {
             </div>
 
             <div className="flex space-x-6 border-b border-gray-300 mb-8">
-              {["Home", "About"].map((tab) => (
+              {["Home", "About", "Reads"].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
@@ -124,6 +124,15 @@ const ProfilePage = () => {
 
             <main className="flex-grow bg-white rounded-lg p-6">
             {activeTab === "Home" && (
+            <section>
+              <h3 className="text-lg font-medium text-gray-800 mb-4">No posts yet.</h3>
+              <div className="bg-gray-100 border border-gray-200 rounded-lg p-6 flex justify-center items-center">
+                <p className="text-gray-500">No stories yet.</p>
+              </div>
+            </section>
+          )}
+
+          {activeTab === "Reads" && (
             <section>
               <h3 className="text-lg font-medium text-gray-800 mb-4">Reading list</h3>
               <div className="bg-gray-100 border border-gray-200 rounded-lg p-6 flex justify-center items-center">
