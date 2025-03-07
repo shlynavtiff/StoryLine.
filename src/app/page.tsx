@@ -21,7 +21,6 @@ const page = () => {
         </div>
         <div className="text-lg">
           <ClientComponent/>
-          <Logout/>
           A place to read, write, and deepen your understanding.
         </div>
         <div className="flex flex-col md:flex-row items-center gap-4">
