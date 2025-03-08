@@ -1,26 +1,39 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useEffect, } from "react"
-import Image from "next/image"
-import { IoIosMore } from "react-icons/io"
-import { useParams } from "next/navigation"
-import Header from "@/components/Header"
-import { createClient } from "@/utils/supabase/client"
-import toast from "react-hot-toast"
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { IoIosMore } from "react-icons/io";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
+import toast from "react-hot-toast";
 
 const ProfilePage = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab") || "Home";
+
   const { username } = useParams();
-  const [activeTab, setActiveTab] = useState("Home")
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
-  const [bio, setBio] = useState<string>("")
-  const [newBio, setNewBio] = useState<string>("")
-  const [saving, setSaving] = useState(false)
-  const [isEditingBio, setIsEditingBio] = useState(false)
-  const [authUserId, setAuthUserId] = useState<string | null>(null)
-  const [profile, setProfile] = useState<any>(null)
-  const [isOwner, setIsOwner] = useState<boolean>(false)
+  const [activeTab, setActiveTab] = useState(tab);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [bio, setBio] = useState<string>("");
+  const [newBio, setNewBio] = useState<string>("");
+  const [saving, setSaving] = useState(false);
+  const [isEditingBio, setIsEditingBio] = useState(false);
+  const [authUserId, setAuthUserId] = useState<string | null>(null);
+  const [profile, setProfile] = useState<any>(null);
+  const [isOwner, setIsOwner] = useState<boolean>(false);
   const [userNotFound, setUserNotFound] = useState<boolean>(false);
+
+  const handleTabChange = (tabName: string) => {
+    setActiveTab(tabName);
+    router.push(`/profile/${username}?tab=${tabName}`, { scroll: false });
+  };
+
+  useEffect(() => {
+    if (tab) {
+      setActiveTab(tab);
+    }
+  }, [tab]);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -111,10 +124,10 @@ const ProfilePage = () => {
             </div>
 
             <div className="flex space-x-6 border-b border-gray-300 mb-8">
-              {["Home", "About", "Reads"].map((tab) => (
+              {["Home", "About", "Library"].map((tab) => (
                 <button
                   key={tab}
-                  onClick={() => setActiveTab(tab)}
+                  onClick={() => handleTabChange(tab)}
                   className={`pb-2 text-sm font-medium ${activeTab === tab ? "text-gray-800 border-b-2 border-black" : "text-gray-500 hover:text-gray-800"}`}
                 >
                   {tab}
@@ -132,11 +145,11 @@ const ProfilePage = () => {
             </section>
           )}
 
-          {activeTab === "Reads" && (
+          {activeTab === "Library" && (
             <section>
-              <h3 className="text-lg font-medium text-gray-800 mb-4">Reading list</h3>
+              <h3 className="text-lg font-medium text-gray-800 mb-4">Library</h3>
               <div className="bg-gray-100 border border-gray-200 rounded-lg p-6 flex justify-center items-center">
-                <p className="text-gray-500">No stories</p>
+                <p className="text-gray-500">No saved stories yet.</p>
               </div>
             </section>
           )}

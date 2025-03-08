@@ -1,22 +1,32 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react';
-import Image from "next/image";
-import testing from '../assets/wasd.jpg'
-import { IoIosMore } from "react-icons/io";
-import Header from "@/components/Header";
-import { ArrowUpRight } from 'lucide-react';
-import { Checkbox } from "@/components/ui/checkbox"
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FiShare } from "react-icons/fi";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 const page = () => {
     const [activeTab, setActiveTab] = useState("Published");
     const [isDropdownOpenShare, setIsDropdownOpenShare] = useState<boolean>(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const tab = searchParams.get("tab") || "Published";
+
     const dropdownRefShare = useRef<HTMLDivElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const handleTabChange = (tabName: string) => {
+        setActiveTab(tabName);
+        router.push(`/stories?tab=${tabName}`, { scroll: false });
+      };
+    
+      useEffect(() => {
+        if (tab) {
+          setActiveTab(tab);
+        }
+      }, [tab]);
 
     // Function to toggle share dropdown visibility
     const toggleDropdownShare = () => {
@@ -87,10 +97,10 @@ const page = () => {
 
                 {/* Tabs */}
                 <div className="flex space-x-6 border-b border-gray-300 mb-8">
-                    {["Drafts", "Published", "Responses"].map((tab) => (
+                    {["Published", "Drafts", "Responses"].map((tab) => (
                         <button
                             key={tab}
-                            onClick={() => setActiveTab(tab)}
+                            onClick={() => handleTabChange(tab)}
                             className={`pb-2 text-sm font-medium ${activeTab === tab
                                 ? "text-gray-800 border-b-2  border-black"
                                 : "text-gray-500 hover:text-gray-800"

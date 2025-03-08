@@ -195,7 +195,7 @@ const DynamicHeader = () => {
                   Profile
                 </Link>
                 <Link
-                  href="/library"
+                  href={`/profile/${username}?tab=Library`}
                   className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   role="menuitem"
                 >
@@ -203,7 +203,7 @@ const DynamicHeader = () => {
                   Library
                 </Link>
                 <Link
-                  href="/stories"
+                  href={`/stories?tab=Published`}
                   className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   role="menuitem"
                 >
