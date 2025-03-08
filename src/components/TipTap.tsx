@@ -1,5 +1,4 @@
 "use client"
-// @/components/TipTap.tsx
 import BulletList from '@tiptap/extension-bullet-list'
 import ListItem from '@tiptap/extension-list-item'
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -137,6 +136,8 @@ const Tiptap = () => {
     })
 
     const setLink = useCallback(() => {
+        if (!editor) return;
+
         const previousUrl = editor.getAttributes('link').href
         const url = window.prompt('URL', previousUrl)
 
@@ -158,26 +159,19 @@ const Tiptap = () => {
             editor.chain().focus().extendMarkRange('link').setLink({ href: url })
                 .run()
         } catch (e) {
-            alert(e.message)
+            if (e instanceof Error) {  // ✅ Ensure 'e' is of type Error
+                alert(e.message);
+            } else {
+                alert('An unknown error occurred');
+            }
         }
     }, [editor])
 
 
-    const setHeading = (level: number) => {
+    const setHeading = (level: 1 | 2 | 3 ) => {
+        if (!editor) return;
         editor?.chain().focus().toggleHeading({ level }).run();
     };
-
-    //   const indent = () => {
-    //     if (editor) {
-    //       editor.chain().focus().indent().run()
-    //     }
-    //   }
-
-    //   const outdent = () => {
-    //     if (editor) {
-    //       editor.chain().focus().outdent().run()
-    //     }
-    //   }
 
     const addImage = () => {
         const input = document.createElement("input");
@@ -377,20 +371,6 @@ const Tiptap = () => {
                                 </SelectContent>
                             </Select>
                         </div>
-{/* 
-                        <div className="flex items-center mr-2">
-                            <Select defaultValue="Normal" onValueChange={setFontSize}>
-                                <SelectTrigger className="h-8 gap-1 border-0 hover:bg-muted focus:ring-0 w-24">
-                                    <SelectValue placeholder="Size" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="Small">Small</SelectItem>
-                                    <SelectItem value="Normal">Normal</SelectItem>
-                                    <SelectItem value="Large">Large</SelectItem>
-                                    <SelectItem value="Huge">Huge</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div> */}
 
                         <Separator orientation="vertical" className="h-6 mx-1" />
 
@@ -574,16 +554,6 @@ const Tiptap = () => {
                             </TooltipTrigger>
                             <TooltipContent>Link</TooltipContent>
                         </Tooltip>
-
-                        {/* <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-                                    <span className="font-bold text-xs">A</span>
-                                    <span className="sr-only">Text Color</span>
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Text Color</TooltipContent>
-                        </Tooltip> */}
 
                         <Tooltip>
                             <TooltipTrigger asChild>

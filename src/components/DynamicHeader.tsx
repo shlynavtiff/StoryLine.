@@ -12,8 +12,11 @@ import Link from "next/link"
 import { CiSettings, CiUser, CiBookmark, CiViewList, CiCircleQuestion, CiLogout } from "react-icons/ci"
 import { RiBuilding2Line } from "react-icons/ri"
 import Logout from "@/app/(auth)/authComp/Logout"
+import { signOut } from "../../actions/auth"
+
 
 const DynamicHeader = () => {
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null)
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const [username, setUsername] = useState<string | null>(null)
@@ -101,11 +104,16 @@ const DynamicHeader = () => {
     }
   }, [user?.id])
 
-  const handleLogout = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    setShowDropdown(false)
-  }
+  const handleLogout = async (event: React.FormEvent) => {
+      event.preventDefault();
+      setLoading(true);
+  
+      await signOut();
+  
+      setLoading(false);
+  
+      console.log("Signed out");
+    };
 
   if (!user) {
     return <HeaderSignin />
@@ -227,13 +235,11 @@ const DynamicHeader = () => {
                   Help
                 </Link>
                 <div className="border-t border-gray-100 my-1"></div>
-                <button
-                  onClick={handleLogout}
+                <button onClick={handleLogout}
                   className="flex w-full items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  role="menuitem"
-                >
+                  role="menuitem">
                   <CiLogout className="mr-3" size={18} />
-                  <Logout/>
+                  Logout
                 </button>
               </div>
             </div>
