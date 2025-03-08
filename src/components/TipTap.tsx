@@ -3,8 +3,8 @@ import BulletList from '@tiptap/extension-bullet-list'
 import ListItem from '@tiptap/extension-list-item'
 import { useEditor, EditorContent } from '@tiptap/react'
 import { Image } from '@tiptap/extension-image'
-import { useState, useCallback } from "react"
-import { Bold, Underline as UnderlineIcon, Italic as ItalicIcon, Strikethrough, Quote, List, ListOrdered, Indent as IndentIcon, Outdent, Link as LinkIcon, Trash2, Undo, Redo, CornerDownRight, Code, MessageSquareQuote, Image as ImageIcon, SquareSplitVertical} from "lucide-react"
+import { useState, useCallback, FormEvent } from "react"
+import { Bold, Underline as UnderlineIcon, Italic as ItalicIcon, Strikethrough, Quote, List, ListOrdered, Indent as IndentIcon, Outdent, Link as LinkIcon, Trash2, Undo, Redo, CornerDownRight, Code, MessageSquareQuote, Image as ImageIcon, SquareSplitVertical } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -27,20 +27,20 @@ import Link from '@tiptap/extension-link'
 import Typography from '@tiptap/extension-typography'
 import FontFamily from '@tiptap/extension-font-family'
 import TextStyle from '@tiptap/extension-text-style'
-import { Indent } from "./Indentation"; // Import your custom Indent extension
+import { Indent } from "./Indentation";
+import { createClient } from "../utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 const Tiptap = () => {
     const [title, setTitle] = useState("")
-    const [fontStyle, setFontStyle] = useState("Normal")
     const [fontFamily, setFontFamily] = useState("Sans Serif")
-    const [fontSize, setFontSize] = useState("Normal")
     const lowlight = createLowlight(all)
-
-    const [openModal, setOpenModal] = useState(false);
     const [maxWidth, setMaxWidth] = useState(800);
     const [maxHeight, setMaxHeight] = useState(600);
-
-
+    const [content, setContent] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
+    const router = useRouter();
+    const [pendingImages, setPendingImages] = useState<{ file: File; placeholder: string }[]>([]);
 
     const editor = useEditor({
         extensions: [
@@ -74,15 +74,12 @@ const Tiptap = () => {
                 protocols: ['http', 'https'],
                 isAllowedUri: (url, ctx) => {
                     try {
-                        // construct URL
                         const parsedUrl = url.includes(':') ? new URL(url) : new URL(`${ctx.defaultProtocol}://${url}`)
 
-                        // use default validation
                         if (!ctx.defaultValidate(parsedUrl.href)) {
                             return false
                         }
 
-                        // disallowed protocols
                         const disallowedProtocols = ['ftp', 'file', 'mailto']
                         const protocol = parsedUrl.protocol.replace(':', '')
 
@@ -90,14 +87,12 @@ const Tiptap = () => {
                             return false
                         }
 
-                        // only allow protocols specified in ctx.protocols
                         const allowedProtocols = ctx.protocols.map(p => (typeof p === 'string' ? p : p.scheme))
 
                         if (!allowedProtocols.includes(protocol)) {
                             return false
                         }
 
-                        // disallowed domains
                         const disallowedDomains = ['example-phishing.com', 'malicious-site.net']
                         const domain = parsedUrl.hostname
 
@@ -105,7 +100,6 @@ const Tiptap = () => {
                             return false
                         }
 
-                        // all checks have passed
                         return true
                     } catch {
                         return false
@@ -113,10 +107,8 @@ const Tiptap = () => {
                 },
                 shouldAutoLink: url => {
                     try {
-                        // construct URL
                         const parsedUrl = url.includes(':') ? new URL(url) : new URL(`https://${url}`)
 
-                        // only auto-link if the domain is not in the disallowed list
                         const disallowedDomains = ['example-no-autolink.com', 'another-no-autolink.com']
                         const domain = parsedUrl.hostname
 
@@ -134,6 +126,113 @@ const Tiptap = () => {
         ],
         content: '<p>Tell your story. . . </p>',
     })
+
+    const addImage = () => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+    
+        input.onchange = async (event) => {
+            const file = (event.target as HTMLInputElement).files?.[0];
+            if (!file || !editor) return;
+    
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+    
+            reader.onload = () => {
+                const img = new window.Image();
+                img.src = reader.result as string;
+    
+                img.onload = () => {
+                    let { width, height } = img;
+    
+                    if (width > maxWidth || height > maxHeight) {
+                        const aspectRatio = width / height;
+                        if (width > height) {
+                            width = maxWidth;
+                            height = maxWidth / aspectRatio;
+                        } else {
+                            height = maxHeight;
+                            width = maxHeight * aspectRatio;
+                        }
+                    }
+    
+                    const canvas = document.createElement("canvas");
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext("2d");
+    
+                    if (!ctx) return;
+    
+                    ctx.drawImage(img, 0, 0, width, height);
+                    canvas.toBlob((blob) => {
+                        if (!blob) return;
+    
+                        const resizedFile = new File([blob], file.name, { type: file.type });
+    
+                        const placeholder = canvas.toDataURL("image/jpeg", 0.9);
+                        setPendingImages((prev) => [...prev, { file: resizedFile, placeholder }]);
+    
+                        // Insert the placeholder (temporary preview) into the editor
+                        editor.chain().focus().setImage({ src: placeholder }).run();
+                    }, file.type, 0.9);
+                };
+            };
+        };
+    
+        input.click();
+    };
+    
+    const handleSubmit = async () => {
+        const supabase = await createClient();
+        if (!editor || !editor.getHTML().trim()) {
+            alert("Post content cannot be empty!");
+            return;
+        }
+    
+        const { data: userData, error: userError } = await supabase.auth.getUser();
+        if (userError || !userData?.user) {
+            alert("You must be logged in to publish a post!");
+            return;
+        }
+    
+        let postContent = editor.getHTML();
+    
+        // Upload all images in pendingImages and replace placeholders with Supabase URLs
+        for (const { file, placeholder } of pendingImages) {
+            const filePath = `blog-images/${Date.now()}-${file.name}`;
+            const { data, error } = await supabase.storage.from("images").upload(filePath, file);
+    
+            if (error) {
+                console.error("Upload error:", error);
+                alert("Failed to upload an image");
+                return;
+            }
+    
+            const imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${filePath}`;
+            postContent = postContent.replace(placeholder, imageUrl);
+        }
+    
+        // Insert post into Supabase
+        const { error: insertError } = await supabase.from("posts").insert([
+            {
+                title: "My Blog Post", // Change this to a dynamic title input if needed
+                content: postContent,
+                user_id: userData.user.id,
+            },
+        ]);
+    
+        if (insertError) {
+            alert("Failed to publish post");
+            console.error(insertError);
+        } else {
+            alert("Post published successfully!");
+            setPendingImages([]); // Clear pending images
+            setContent(""); // Clear editor
+            editor.commands.clearContent();
+        }
+    };
+
 
     const setLink = useCallback(() => {
         if (!editor) return;
@@ -159,7 +258,7 @@ const Tiptap = () => {
             editor.chain().focus().extendMarkRange('link').setLink({ href: url })
                 .run()
         } catch (e) {
-            if (e instanceof Error) {  // ✅ Ensure 'e' is of type Error
+            if (e instanceof Error) {
                 alert(e.message);
             } else {
                 alert('An unknown error occurred');
@@ -168,59 +267,11 @@ const Tiptap = () => {
     }, [editor])
 
 
-    const setHeading = (level: 1 | 2 | 3 ) => {
+    const setHeading = (level: 1 | 2 | 3) => {
         if (!editor) return;
         editor?.chain().focus().toggleHeading({ level }).run();
     };
 
-    const addImage = () => {
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = "image/*";
-
-        input.onchange = (event) => {
-            const file = (event.target as HTMLInputElement).files?.[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-
-            reader.onload = () => {
-                const img = new window.Image();
-                img.src = reader.result as string;
-
-                img.onload = () => {
-                    let { width, height } = img;
-
-                    // Resize logic with user-selected values
-                    if (width > maxWidth || height > maxHeight) {
-                        const aspectRatio = width / height;
-                        if (width > height) {
-                            width = maxWidth;
-                            height = maxWidth / aspectRatio;
-                        } else {
-                            height = maxHeight;
-                            width = maxHeight * aspectRatio;
-                        }
-                    }
-
-                    // Create a canvas for resizing
-                    const canvas = document.createElement("canvas");
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext("2d");
-
-                    if (ctx) {
-                        ctx.drawImage(img, 0, 0, width, height);
-                        const resizedBase64 = canvas.toDataURL("image/jpeg", 0.9);
-                        editor?.chain().focus().setImage({ src: resizedBase64 }).run();
-                    }
-                };
-            };
-        };
-
-        input.click();
-    };
 
 
     if (!editor) {
@@ -507,9 +558,9 @@ const Tiptap = () => {
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button variant="ghost" size="icon"
-                                     onClick={() => editor.chain().focus().splitListItem('listItem').run()}
-                                     disabled={!editor.can().splitListItem('listItem')}>
-                                   <SquareSplitVertical className="h-4 w-4"/>
+                                    onClick={() => editor.chain().focus().splitListItem('listItem').run()}
+                                    disabled={!editor.can().splitListItem('listItem')}>
+                                    <SquareSplitVertical className="h-4 w-4" />
                                     <span className="sr-only">Split List item</span>
                                 </Button>
                             </TooltipTrigger>
@@ -521,22 +572,22 @@ const Tiptap = () => {
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button variant="ghost" size="icon"
-                                onClick={addImage}
-                                    >
-                                    <ImageIcon className="h-4 w-4"  />
-                                    <span className="sr-only">Code Block</span>
+                                    onClick={addImage}
+                                >
+                                    <ImageIcon className="h-4 w-4" />
+                                    <span className="sr-only">Add Image</span>
                                 </Button>
                             </TooltipTrigger>
-                            <TooltipContent>Code Block</TooltipContent>
+                            <TooltipContent>Add Image</TooltipContent>
                         </Tooltip>
 
 
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button variant="ghost" size="icon"
-                                onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                                className={`h-8 w-8 p-0 ${editor.isActive('codeBlock') ? 'is-active' : ''}`}
-                                    >
+                                    onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+                                    className={`h-8 w-8 p-0 ${editor.isActive('codeBlock') ? 'is-active' : ''}`}
+                                >
                                     <Code />
                                     <span className="sr-only">Code Block</span>
                                 </Button>
@@ -546,8 +597,8 @@ const Tiptap = () => {
 
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon" 
-                                onClick={setLink} className={` h-8 w-8 p-0" ${editor.isActive('link') ? 'is-active' : ''}`}>
+                                <Button variant="ghost" size="icon"
+                                    onClick={setLink} className={` h-8 w-8 p-0" ${editor.isActive('link') ? 'is-active' : ''}`}>
                                     <LinkIcon className="h-4 w-4" />
                                     <span className="sr-only">Link</span>
                                 </Button>
@@ -604,7 +655,14 @@ const Tiptap = () => {
                     </TooltipProvider>
                 </div>
             </div>
-            <EditorContent editor={editor} className='tiptap' placeholder='Tell your story. . . ' />
+            <EditorContent editor={editor} className='tiptap' value={content} placeholder='Tell your story. . . ' />
+            <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+            >
+                {loading ? "Publishing..." : "Publish"}
+            </button>
         </>
     )
 }

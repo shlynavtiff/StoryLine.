@@ -1,4 +1,4 @@
-import { Node, mergeAttributes } from "@tiptap/core";
+
 import Image from "@tiptap/extension-image";
 
 const CustomImage = Image.extend({
