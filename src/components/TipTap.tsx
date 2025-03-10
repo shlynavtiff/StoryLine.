@@ -384,21 +384,6 @@ const Tiptap = () => {
                                     </SelectItem>
                                 </SelectContent>
                             </Select>
-
-
-                        </div>
-
-                        <div className="flex items-center mr-2">
-                            <Select defaultValue="Sans Serif" onValueChange={setFontFamily}>
-                                <SelectTrigger className="h-8 gap-1 border-0 hover:bg-muted focus:ring-0 w-28">
-                                    <SelectValue placeholder="Font" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="Sans Serif">Sans Serif</SelectItem>
-                                    <SelectItem value="Serif">Serif</SelectItem>
-                                    <SelectItem value="Monospace">Monospace</SelectItem>
-                                </SelectContent>
-                            </Select>
                         </div>
 
                         <div className="flex items-center mr-2">

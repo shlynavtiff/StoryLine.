@@ -105,8 +105,8 @@ body {
     border-left: 3px solid purple !important;
     margin: 1.5rem 0;
     padding-left: 1rem;
-    color: black;
   }
+  
 
   /* List styles */
   ul, ol {
@@ -121,15 +121,8 @@ body {
   caret-color: purple;
   min-height: 400px;
   padding: 5px;
-}
 
-.tiptap:focus {
-  outline: none;
-  border: none;
-}
-
-
-
+  
 .tiptap ul {
   list-style-type: disc !important; /* Ensure bullet type */
   color: black !important; /* Make bullets black */
@@ -223,4 +216,21 @@ h3 {
 
 .ProseMirror ol {
   color: black;
+}
+
+}
+
+.tiptap:focus {
+  outline: none;
+  border: none;
+}
+
+
+
+
+
+.post-content {
+  word-wrap: break-word; /* Breaks long words */
+  overflow-wrap: break-word; /* Ensures text wraps within container */
+  white-space: normal; /* Allows text to wrap */
 }

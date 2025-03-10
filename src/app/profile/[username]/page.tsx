@@ -6,6 +6,7 @@ import { IoIosMore } from "react-icons/io";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 
 const ProfilePage = () => {
@@ -144,7 +145,7 @@ const ProfilePage = () => {
   const stripHtml = (html: string) => {
     return html.replace(/<[^>]*>/g, "").trim(); // Remove HTML tags and trim spaces
   };
-  
+
 
   return (
     <>
@@ -201,21 +202,23 @@ const ProfilePage = () => {
                     </div>
                   ) : (
                     <div className="space-y-4">
-  {posts.map((post) => {
-    const cleanContent = stripHtml(post.content); // Remove all HTML tags
-    return (
-      <div key={post.id} className="border p-4 rounded-md shadow-sm bg-gray-50">
-        <h4 className="text-xl font-semibold">{post.title}</h4>
-        <p className="text-gray-700">
-          {cleanContent.length > 100 ? cleanContent.substring(0, 100) + "..." : cleanContent}
-        </p>
-        <p className="text-sm text-gray-500 mt-2">
-          Posted on {new Date(post.created_at).toLocaleDateString()}
-        </p>
-      </div>
-    );
-  })}
-</div>
+                      {posts.map((post) => {
+                        const cleanContent = stripHtml(post.content); // Remove all HTML tags
+                        return (
+                          <div key={post.id} className="border p-4 rounded-md shadow-sm bg-gray-50">
+                            <Link href={`/post/${username}/${post.id}`} className="text-xl font-semibold hover:underline">
+                              <h4 className="text-xl font-semibold">{post.title}</h4>
+                            </Link>
+                            <p className="text-gray-700">
+                              {cleanContent.length > 100 ? cleanContent.substring(0, 100) + "..." : cleanContent}
+                            </p>
+                            <p className="text-sm text-gray-500 mt-2">
+                              Posted on {new Date(post.created_at).toLocaleDateString()}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
 
 
                   )}

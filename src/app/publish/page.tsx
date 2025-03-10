@@ -14,9 +14,9 @@ export default function TextEditor() {
 
   return (
     <EditorProvider value={editor}>
-    <div className="flex flex-col w-full max-w-3xl mx-auto bg-background rounded-md shadow-sm border">
-      <Tiptap />
-    </div>
+      <div className="flex flex-col w-full max-w-3xl mx-auto bg-background rounded-md shadow-sm border">
+        <Tiptap />
+      </div>
     </EditorProvider>
   )
 }
